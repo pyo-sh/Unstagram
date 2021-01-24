@@ -25,6 +25,10 @@ public class Board {
 
     @Setter
     @NotEmpty
+    private String reported_date;
+
+    @Setter
+    @NotEmpty
     private String content;
 
     // TODO : List 형태는 Transient 로 DB 처리를 하지 않았다. 나중에 class 로 빼내어서 처리

@@ -28,6 +28,7 @@ public class BoardController {
         Board board = boardService.addBoard(Board.builder()
                 .ID(resource.getID())
                 .user(resource.getUser())
+                .reported_date(resource.getReported_date())
                 .content(resource.getContent())
                 .pictures(resource.getPictures())
                 .build());
@@ -49,7 +50,13 @@ public class BoardController {
             @Valid @RequestBody Board resource
     ){
         // TODO : user 가 다르면 업데이트 X (후에는 Authentication)
-        boardService.updateBoard(boardID, resource.getContent(), resource.getPictures());
+        boardService.updateBoard(
+                boardID,
+                resource.getReported_date(),
+                resource.getContent(),
+                resource.getPictures()
+        );
+
         return "{\"updated\":\"true\"}";
     }
 

@@ -34,12 +34,13 @@ public class BoardService {
 
     // DB 에서 update 는 Transactional 하게 처리하여야 한다 (동시 수정 X)
     @Transactional
-    public Board updateBoard(Integer id, String content, List<String> pictures){
+    public Board updateBoard(Integer id, String reported_date, String content, List<String> pictures){
         // null 처리 했지만 사실 Runtime Exception 발생 될 것이다...
         Board board = boardRepository.findBoardByID(id).orElse(null);
         // if 처리는 안전함을 위해 적어두었다
         if (board != null){
             board.setContent(content);
+            board.setReported_date(reported_date);
             board.setPictures(pictures);
         }
 

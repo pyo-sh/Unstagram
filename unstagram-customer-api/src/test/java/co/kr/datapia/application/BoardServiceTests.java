@@ -44,6 +44,7 @@ class BoardServiceTests {
         this.mockBoards.add(Board.builder()
                 .ID(1)
                 .user("Pyo")
+                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .pictures(pictures)
                 .build());
@@ -69,6 +70,7 @@ class BoardServiceTests {
             return Board.builder()
                     .ID(1)
                     .user(board.getUser())
+                    .reported_date(board.getReported_date())
                     .content(board.getContent())
                     .pictures(board.getPictures())
                     .build();
@@ -81,6 +83,7 @@ class BoardServiceTests {
         Board board = Board.builder()
                 .user("Pyo")
                 .content("this is content")
+                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .pictures(pictures)
                 .build();
 
@@ -89,6 +92,7 @@ class BoardServiceTests {
         assertEquals(created.getID(), 1);
         assertEquals(created.getUser(), "Pyo");
         assertEquals(created.getContent(), "this is content");
+        assertEquals(created.getReported_date(), "Tue Jan 19 2021 17:06:30 GMT+0900");
         assertTrue(created.getPictures().containsAll(pictures));
     }
 
@@ -100,6 +104,7 @@ class BoardServiceTests {
 
         assertEquals(board.getID(), expectedBoard.getID());
         assertEquals(board.getUser(), expectedBoard.getUser());
+        assertEquals(board.getReported_date(), expectedBoard.getReported_date());
         assertEquals(board.getContent(), expectedBoard.getContent());
         assertTrue(board.getPictures().containsAll(expectedBoard.getPictures()));
     }
@@ -118,8 +123,14 @@ class BoardServiceTests {
 
         given(boardRepository.findBoardByID(board.getID())).willReturn(Optional.of(board));
 
-        boardService.updateBoard(board.getID(), "My Favorite Food", pictures);
+        boardService.updateBoard(
+                board.getID(),
+                "Wed Jan 20 2021 17:00:00 GMT+0900",
+                "My Favorite Food",
+                pictures
+        );
 
+        assertEquals(board.getReported_date(), "Wed Jan 20 2021 17:00:00 GMT+0900");
         assertEquals(board.getContent(), "My Favorite Food");
         assertTrue(board.getPictures().containsAll(pictures));
     }

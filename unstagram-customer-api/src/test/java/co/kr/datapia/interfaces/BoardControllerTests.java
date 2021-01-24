@@ -44,6 +44,7 @@ class BoardControllerTests {
                 .ID(1)
                 .user("Pyo")
                 .content("this is content")
+                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .pictures(pictures)
                 .build());
 
@@ -53,6 +54,7 @@ class BoardControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"id\":1")))
                 .andExpect(content().string(containsString("\"user\":\"Pyo\"")))
+                .andExpect(content().string(containsString("\"reported_date\":\"Tue Jan 19 2021 17:06:30 GMT+0900\"")))
                 .andExpect(content().string(containsString("\"content\":\"this is content\"")))
                 .andExpect(content().string(containsString("\"pictures\":[\"food\",\"background\"]")));
     }
@@ -64,6 +66,7 @@ class BoardControllerTests {
             return Board.builder()
                     .ID(1)
                     .user(board.getUser())
+                    .reported_date(board.getReported_date())
                     .content(board.getContent())
                     .pictures(board.getPictures())
                     .build();
@@ -71,8 +74,10 @@ class BoardControllerTests {
 
         mvc.perform(post("/board")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":1, \"user\":\"Pyo\", \"content\":\"this is content\"" +
-                        ", \"pictures\":[\"food\"]}"))
+                .content("{\"id\":1, \"user\":\"Pyo\"," +
+                        " \"reported_date\":\"Tue Jan 19 2021 17:06:30 GMT+0900\"," +
+                        " \"content\":\"this is content\"," +
+                        " \"pictures\":[\"food\"]}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/board/1"))
                 .andExpect(content().string("{}"));
@@ -84,7 +89,7 @@ class BoardControllerTests {
     public void createBoardWithInvalidData() throws Exception {
         mvc.perform(post("/board")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"\", \"user\":\"\", \"content\":\"\"}"))
+                .content("{\"id\":\"\", \"user\":\"\", \"reported_date\":\"\" \"content\":\"\"}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -97,6 +102,7 @@ class BoardControllerTests {
         Board board = Board.builder()
                 .ID(1)
                 .user("Pyo")
+                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .pictures(pictures)
                 .build();
@@ -107,6 +113,7 @@ class BoardControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"id\":1")))
                 .andExpect(content().string(containsString("\"user\":\"Pyo\"")))
+                .andExpect(content().string(containsString("\"reported_date\":\"Tue Jan 19 2021 17:06:30 GMT+0900\"")))
                 .andExpect(content().string(containsString("\"content\":\"this is content\"")))
                 .andExpect(content().string(containsString("\"pictures\":[\"food\",\"background\"]")));
     }
@@ -126,6 +133,7 @@ class BoardControllerTests {
     public void updateBoardWithValidData() throws Exception {
         Integer id = 1;
         String user = "Pyo";
+        String reported_date = "Tue Jan 19 2021 17:06:30 GMT+0900";
         String content = "My Favorite Color";
         List<String> pictures = new ArrayList<>();
         pictures.add("food");
@@ -135,12 +143,13 @@ class BoardControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\":" + id.toString()
                         + ", \"user\":\"" + user
+                        + "\", \"reported_date\":\"" + reported_date
                         + "\", \"content\":\"" + content
                         + "\", \"pictures\":[\"food\", \"background\"]}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("{\"updated\":\"true\"}")));
 
-        verify(boardService).updateBoard(id, content, pictures);
+        verify(boardService).updateBoard(id, reported_date, content, pictures);
     }
 
     @Test
@@ -148,7 +157,7 @@ class BoardControllerTests {
         Integer id = 1;
         mvc.perform(patch("/board/" + id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":1, \"user\":\"Pyo\", \"content\":\"\", \"pictures\":}}"))
+                .content("{\"id\":1, \"user\":\"Pyo\", \"reported_date\":\"\", \"content\":\"\", \"pictures\":}}"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -161,6 +170,7 @@ class BoardControllerTests {
         Board board = Board.builder()
                 .ID(1)
                 .user("Pyo")
+                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .pictures(pictures)
                 .build();
