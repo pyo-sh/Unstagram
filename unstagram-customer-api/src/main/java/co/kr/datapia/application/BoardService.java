@@ -45,4 +45,15 @@ public class BoardService {
 
         return board;
     }
+
+    // DB 에서 delete 도 Transactional 하게 처리하여야 한다
+    @Transactional
+    public Board deleteBoard(Integer boardID) {
+        Board board = boardRepository.findBoardByID(boardID)
+                .orElseThrow(() -> new BoardNotFoundException(boardID));
+
+        boardRepository.deleteBoardByID(board.getID());
+
+        return board;
+    }
 }

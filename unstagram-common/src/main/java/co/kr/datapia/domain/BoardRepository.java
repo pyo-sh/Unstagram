@@ -11,4 +11,6 @@ public interface BoardRepository extends CrudRepository<Board, Integer> {
     Optional<Board> findBoardByID(Integer id);
 
     Board save(Board board);
+
+    void deleteBoardByID(Integer id);
 }

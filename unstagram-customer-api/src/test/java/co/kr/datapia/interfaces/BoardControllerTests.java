@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,5 +150,40 @@ class BoardControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\":1, \"user\":\"Pyo\", \"content\":\"\", \"pictures\":}}"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteBoardWithExistedID() throws Exception {
+        List<String> pictures = new ArrayList<>();
+        pictures.add("food");
+        pictures.add("background");
+
+        Board board = Board.builder()
+                .ID(1)
+                .user("Pyo")
+                .content("this is content")
+                .pictures(pictures)
+                .build();
+
+        given(boardService.deleteBoard(board.getID())).willReturn(board);
+
+        mvc.perform(delete("/board/" + board.getID().toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("redirect:/")));
+
+        verify(boardService).deleteBoard(board.getID());
+    }
+
+    @Test
+    public void deleteBoardWithNotExistedID() throws Exception {
+        Integer id = 1;
+
+        given(boardService.deleteBoard(id)).willThrow(new BoardNotFoundException(id));
+
+        mvc.perform(delete("/board/" + id.toString()))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("{}")));
+
+        verify(boardService).deleteBoard(id);
     }
 }

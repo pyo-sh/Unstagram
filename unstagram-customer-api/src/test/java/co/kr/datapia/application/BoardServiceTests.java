@@ -15,6 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 class BoardServiceTests {
     private BoardService boardService;
@@ -121,5 +122,19 @@ class BoardServiceTests {
 
         assertEquals(board.getContent(), "My Favorite Food");
         assertTrue(board.getPictures().containsAll(pictures));
+    }
+
+    @Test
+    public void deleteBoardWithExistedID() {
+        Integer id = this.mockBoards.get(0).getID();
+
+        boardService.deleteBoard(id);
+
+        verify(boardRepository).deleteBoardByID(id);
+    }
+
+    @Test
+    public void deleteBoardWithNotExistedID() {
+        assertThrows(BoardNotFoundException.class, () -> boardService.deleteBoard(242));
     }
 }

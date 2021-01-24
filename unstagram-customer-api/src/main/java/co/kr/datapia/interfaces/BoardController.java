@@ -52,4 +52,13 @@ public class BoardController {
         boardService.updateBoard(boardID, resource.getContent(), resource.getPictures());
         return "{\"updated\":\"true\"}";
     }
+
+    @DeleteMapping("/board/{boardID}")
+    public String deleteBoard(
+            @PathVariable Integer boardID
+    ){
+        // TODO : 권한을 가진 자가 이를 처리하게 해야할 것
+        boardService.deleteBoard(boardID);
+        return "redirect:/";
+    }
 }
