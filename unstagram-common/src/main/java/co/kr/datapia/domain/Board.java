@@ -1,10 +1,7 @@
 package co.kr.datapia.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,9 +22,13 @@ public class Board {
 
     @NotEmpty
     private String user;
+
+    @Setter
     @NotEmpty
     private String content;
 
+    // TODO : List 형태는 Transient 로 DB 처리를 하지 않았다. 나중에 class 로 빼내어서 처리
+    @Setter
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<String> pictures;
