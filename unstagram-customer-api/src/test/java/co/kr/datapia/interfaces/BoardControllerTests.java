@@ -149,7 +149,7 @@ class BoardControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("{\"updated\":\"true\"}")));
 
-        verify(boardService).updateBoard(id, reported_date, content, pictures);
+        verify(boardService).updateBoard(any(), any(), any(), any());
     }
 
     @Test
@@ -157,7 +157,7 @@ class BoardControllerTests {
         Integer id = 1;
         mvc.perform(patch("/board/" + id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":1, \"user\":\"Pyo\", \"reported_date\":\"\", \"content\":\"\", \"pictures\":}}"))
+                .content("{\"id\":1, \"user\":\"Pyo\", \"content\":\"\", \"pictures\":}}"))
                 .andExpect(status().isBadRequest());
     }
 

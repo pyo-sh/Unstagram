@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -28,7 +29,7 @@ public class BoardController {
         Board board = boardService.addBoard(Board.builder()
                 .ID(resource.getID())
                 .user(resource.getUser())
-                .reported_date(resource.getReported_date())
+                .reported_date(new Date().toString())
                 .content(resource.getContent())
                 .pictures(resource.getPictures())
                 .build());
@@ -52,7 +53,7 @@ public class BoardController {
         // TODO : user 가 다르면 업데이트 X (후에는 Authentication)
         boardService.updateBoard(
                 boardID,
-                resource.getReported_date(),
+                new Date().toString(),
                 resource.getContent(),
                 resource.getPictures()
         );
