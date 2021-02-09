@@ -5,13 +5,13 @@ import co.kr.datapia.domain.Board;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class BoardController {
     @Autowired
@@ -24,15 +24,15 @@ public class BoardController {
 
     @PostMapping("/board")
     public ResponseEntity<?> createBoard(
-            @Valid @RequestBody Board resource
-    ) throws URISyntaxException {
+            @Valid @RequestParam("user") String user,
+            @Valid @RequestParam("content") String content,
+            @Valid @RequestParam("files") List<MultipartFile> files
+            //MultipartHttpServletRequest multipartHttpServletRequest
+    ) throws Exception {
         Board board = boardService.addBoard(Board.builder()
-                .ID(resource.getID())
-                .user(resource.getUser())
-                .reported_date(new Date().toString())
-                .content(resource.getContent())
-                .pictures(resource.getPictures())
-                .build());
+                .user(user)
+                .content(content)
+                .build(), files);
 
         URI uriLocation = new URI("/board/" + board.getID());
         return ResponseEntity.created(uriLocation).body("{}");
@@ -53,9 +53,7 @@ public class BoardController {
         // TODO : user 가 다르면 업데이트 X (후에는 Authentication)
         boardService.updateBoard(
                 boardID,
-                new Date().toString(),
-                resource.getContent(),
-                resource.getPictures()
+                resource.getContent()
         );
 
         return "{\"updated\":\"true\"}";

@@ -21,7 +21,7 @@ public class BoardPicture {
     @GeneratedValue
     private Integer ID;
     @NotNull
-    private Integer board_idx;
+    private Integer boardIdx;
 
     // 원본 파일이름 과 서버에 저장된 파일 경로 를 분리한 이유?
     // 동일한 이름을 가진 파일이 업로드가 된다면 오류가 생긴다.

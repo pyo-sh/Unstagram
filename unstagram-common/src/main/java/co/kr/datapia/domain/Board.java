@@ -24,7 +24,6 @@ public class Board {
     private String user;
 
     @Setter
-    @NotEmpty
     private String reported_date;
 
     @Setter
@@ -35,5 +34,5 @@ public class Board {
     @Setter
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<String> pictures;
+    private List<BoardPicture> pictures;
 }
