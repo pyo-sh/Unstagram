@@ -73,9 +73,9 @@ public class FileHandler {
                 // 생성 후 리스트에 추가
                 BoardPicture boardPicture = BoardPicture.builder()
                         .boardIdx(boardID)
-                        .original_file_name(multipartFile.getOriginalFilename())
-                        .stored_file_path(path + "/" + new_file_name)
-                        .file_size(multipartFile.getSize())
+                        .originalFileName(multipartFile.getOriginalFilename())
+                        .storedFilePath(path + "/" + new_file_name)
+                        .fileSize(multipartFile.getSize())
                         .build();
                 fileList.add(boardPicture);
 
@@ -151,9 +151,9 @@ public class FileHandler {
                     // 생성 후 리스트에 추가
                     BoardPicture boardPicture = BoardPicture.builder()
                             .boardIdx(boardID)
-                            .original_file_name(multipartFile.getOriginalFilename())
-                            .stored_file_path(path + "/" + new_file_name)
-                            .file_size(multipartFile.getSize())
+                            .originalFileName(multipartFile.getOriginalFilename())
+                            .storedFilePath(path + "/" + new_file_name)
+                            .fileSize(multipartFile.getSize())
                             .build();
                     fileList.add(boardPicture);
 

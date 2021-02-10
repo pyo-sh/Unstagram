@@ -1,14 +1,14 @@
 package co.kr.datapia.application;
 
-import co.kr.datapia.domain.Board;
-import co.kr.datapia.domain.BoardNotFoundException;
-import co.kr.datapia.domain.BoardRepository;
+import co.kr.datapia.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +21,8 @@ class BoardServiceTests {
     private BoardService boardService;
     @Mock
     private BoardRepository boardRepository;
+    @Mock
+    private BoardPictureRepository boardPictureRepository;
 
     @BeforeEach
     public void setUp () {
@@ -28,7 +30,7 @@ class BoardServiceTests {
 
         mockBoardRepository();
 
-        boardService = new BoardService(boardRepository);
+        boardService = new BoardService(boardRepository, boardPictureRepository);
     }
     // 모든 테스트에서 boardRepository 안에 이 mock 객체가 들어가서 Test 될 것이다
 
@@ -36,22 +38,27 @@ class BoardServiceTests {
     private List<Board> mockBoards;
 
     private void mockBoardRepository () {
-        List<String> pictures = new ArrayList<>();
-        pictures.add("food");
-        pictures.add("background");
+        List<BoardPicture> pictures = new ArrayList<>();
+        pictures.add(BoardPicture.builder()
+                .idx(11)
+                .boardIdx(1)
+                .originalFileName("original_name")
+                .storedFilePath("image/")
+                .fileSize(200L)
+                .build());
 
         this.mockBoards = new ArrayList<>();
         this.mockBoards.add(Board.builder()
-                .ID(1)
+                .idx(1)
                 .user("Pyo")
-                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
+                .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .pictures(pictures)
                 .build());
 
         // Interfaces 에 대한 given 및 willReturn 설정
         given(boardRepository.findAll()).willReturn(this.mockBoards);
-        given(boardRepository.findBoardByID(1)).willReturn(java.util.Optional.of(this.mockBoards.get(0)));
+        given(boardRepository.findBoardByIdx(1)).willReturn(java.util.Optional.of(this.mockBoards.get(0)));
     }
 
     @Test
@@ -60,40 +67,40 @@ class BoardServiceTests {
         List<Board> boards = boardService.getBoards();
         Board board = boards.get(0);
 
-        assertEquals(board.getID(), 1);
+        assertEquals(board.getIdx(), 1);
     }
 
     @Test
-    public void addBoard() {
+    public void addBoard() throws Exception {
         given(boardRepository.save(any())).will(invocation -> {
             Board board = invocation.getArgument(0);
             return Board.builder()
-                    .ID(1)
+                    .idx(1)
                     .user(board.getUser())
-                    .reported_date(board.getReported_date())
+                    .reportedDate(board.getReportedDate())
                     .content(board.getContent())
                     .pictures(board.getPictures())
                     .build();
         });
 
-        List<String> pictures = new ArrayList<>();
-        pictures.add("food");
-        pictures.add("background");
+        String user = "Pyo";
+        String content = "this is content";
+        String reportedDate = new Date().toString();
 
         Board board = Board.builder()
-                .user("Pyo")
-                .content("this is content")
-                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
-                .pictures(pictures)
+                .user(user)
+                .content(content)
+                .reportedDate(reportedDate)
                 .build();
 
-        Board created = boardService.addBoard(board);
+        List<MultipartFile> files = new ArrayList<>();
 
-        assertEquals(created.getID(), 1);
-        assertEquals(created.getUser(), "Pyo");
-        assertEquals(created.getContent(), "this is content");
-        assertEquals(created.getReported_date(), "Tue Jan 19 2021 17:06:30 GMT+0900");
-        assertTrue(created.getPictures().containsAll(pictures));
+        Board created = boardService.addBoard(board, files);
+
+        assertEquals(created.getIdx(), 1);
+        assertEquals(created.getUser(), user);
+        assertEquals(created.getContent(), content);
+        assertEquals(created.getReportedDate(), reportedDate);
     }
 
     @Test
@@ -102,9 +109,9 @@ class BoardServiceTests {
 
         Board expectedBoard = this.mockBoards.get(0);
 
-        assertEquals(board.getID(), expectedBoard.getID());
+        assertEquals(board.getIdx(), expectedBoard.getIdx());
         assertEquals(board.getUser(), expectedBoard.getUser());
-        assertEquals(board.getReported_date(), expectedBoard.getReported_date());
+        assertEquals(board.getReportedDate(), expectedBoard.getReportedDate());
         assertEquals(board.getContent(), expectedBoard.getContent());
         assertTrue(board.getPictures().containsAll(expectedBoard.getPictures()));
     }
@@ -118,30 +125,25 @@ class BoardServiceTests {
     @Test
     public void updateBoard() {
         Board board = this.mockBoards.get(0);
-        List<String> pictures = new ArrayList<>();
-        pictures.add("food");
 
-        given(boardRepository.findBoardByID(board.getID())).willReturn(Optional.of(board));
+        given(boardRepository.findBoardByIdx(board.getIdx())).willReturn(Optional.of(board));
 
         boardService.updateBoard(
-                board.getID(),
-                "Wed Jan 20 2021 17:00:00 GMT+0900",
-                "My Favorite Food",
-                pictures
+                board.getIdx(),
+                "My Favorite Food"
         );
 
-        assertEquals(board.getReported_date(), "Wed Jan 20 2021 17:00:00 GMT+0900");
+        assertEquals(board.getReportedDate(), "Wed Jan 20 2021 17:00:00 GMT+0900");
         assertEquals(board.getContent(), "My Favorite Food");
-        assertTrue(board.getPictures().containsAll(pictures));
     }
 
     @Test
     public void deleteBoardWithExistedID() {
-        Integer id = this.mockBoards.get(0).getID();
+        Integer id = this.mockBoards.get(0).getIdx();
 
         boardService.deleteBoard(id);
 
-        verify(boardRepository).deleteBoardByID(id);
+        verify(boardRepository).deleteBoardByIdx(id);
     }
 
     @Test

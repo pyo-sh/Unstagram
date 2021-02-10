@@ -34,7 +34,7 @@ public class BoardController {
                 .content(content)
                 .build(), files);
 
-        URI uriLocation = new URI("/board/" + board.getID());
+        URI uriLocation = new URI("/board/" + board.getIdx());
         return ResponseEntity.created(uriLocation).body("{}");
     }
 

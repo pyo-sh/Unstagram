@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface BoardRepository extends CrudRepository<Board, Integer> {
     List<Board> findAll();
 
-    Optional<Board> findBoardByID(Integer id);
+    Optional<Board> findBoardByIdx(Integer id);
 
     Board save(Board board);
 
-    void deleteBoardByID(Integer id);
+    void deleteBoardByIdx(Integer id);
 }

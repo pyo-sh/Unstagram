@@ -3,6 +3,9 @@ package co.kr.datapia.interfaces;
 import co.kr.datapia.application.BoardService;
 import co.kr.datapia.domain.Board;
 import co.kr.datapia.domain.BoardNotFoundException;
+import co.kr.datapia.domain.BoardPicture;
+import co.kr.datapia.domain.FileHandler;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -31,20 +36,28 @@ class BoardControllerTests {
     @MockBean
     private BoardService boardService;
 
-    // TODO : List<String> 을 class 로
-
     @Test
     public void list() throws Exception {
-        List<String> pictures = new ArrayList<>();
-        pictures.add("food");
-        pictures.add("background");
+        Integer board_id = 1;
+        String user = "Pyo";
+        String content = "this is content";
+        String reportedDate = new Date().toString();
+
+        List<BoardPicture> pictures = new ArrayList<>();
+        pictures.add(BoardPicture.builder()
+                .idx(11)
+                .boardIdx(board_id)
+                .originalFileName("original_name")
+                .storedFilePath("image/")
+                .fileSize(200L)
+                .build());
 
         List<Board> boards = new ArrayList<>();
         boards.add(Board.builder()
-                .ID(1)
-                .user("Pyo")
-                .content("this is content")
-                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
+                .idx(board_id)
+                .user(user)
+                .content(content)
+                .reportedDate(reportedDate)
                 .pictures(pictures)
                 .build());
 
@@ -52,70 +65,80 @@ class BoardControllerTests {
 
         mvc.perform(get("/boards"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("\"id\":1")))
-                .andExpect(content().string(containsString("\"user\":\"Pyo\"")))
-                .andExpect(content().string(containsString("\"reported_date\":\"Tue Jan 19 2021 17:06:30 GMT+0900\"")))
-                .andExpect(content().string(containsString("\"content\":\"this is content\"")))
-                .andExpect(content().string(containsString("\"pictures\":[\"food\",\"background\"]")));
+                .andExpect(content().string(containsString("\"idx\":" + board_id.toString())))
+                .andExpect(content().string(containsString("\"user\":\"" + user + "\"")))
+                .andExpect(content().string(containsString("\"reported_date\":\"" + reportedDate + "\"")))
+                .andExpect(content().string(containsString("\"content\":\"" + content + "\"")))
+                .andExpect(content().string(containsString("\"pictures\":")));
+        // TODO : pictures 를 확인 ?
     }
 
     @Test
     public void createBoardWithValidData() throws Exception {
-        given(boardService.addBoard(any())).will(invocation -> {
+        given(boardService.addBoard(any(), any())).will(invocation -> {
             Board board = invocation.getArgument(0);
+            List<MultipartFile> files = invocation.getArgument(1);
+            List<BoardPicture> pictures = new FileHandler().parseFileInfo(1, files);
             return Board.builder()
-                    .ID(1)
+                    .idx(1)
                     .user(board.getUser())
-                    .reported_date(board.getReported_date())
+                    .reportedDate(board.getReportedDate())
                     .content(board.getContent())
-                    .pictures(board.getPictures())
+                    .pictures(pictures)
                     .build();
         });
+
+        // TODO : pictures
 
         mvc.perform(post("/board")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\":1, \"user\":\"Pyo\"," +
                         " \"reported_date\":\"Tue Jan 19 2021 17:06:30 GMT+0900\"," +
                         " \"content\":\"this is content\"," +
-                        " \"pictures\":[\"food\"]}"))
+                        " \"pictures\":[]}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/board/1"))
                 .andExpect(content().string("{}"));
 
-        verify(boardService).addBoard(any());
+        verify(boardService).addBoard(any(), any());
     }
 
     @Test
     public void createBoardWithInvalidData() throws Exception {
         mvc.perform(post("/board")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":\"\", \"user\":\"\", \"reported_date\":\"\" \"content\":\"\"}"))
+                .content("{\"id\":\"\", \"user\":\"\", \"content\":\"\"}"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void readBoardWithExistedID() throws Exception {
-        List<String> pictures = new ArrayList<>();
-        pictures.add("food");
-        pictures.add("background");
+        List<BoardPicture> pictures = new ArrayList<>();
+        pictures.add(BoardPicture.builder()
+                .idx(11)
+                .boardIdx(1)
+                .originalFileName("original_name")
+                .storedFilePath("image/")
+                .fileSize(200L)
+                .build());
 
         Board board = Board.builder()
-                .ID(1)
+                .idx(1)
                 .user("Pyo")
-                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
+                .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
-                .pictures(pictures)
+                //.pictures(pictures)
                 .build();
 
-        given(boardService.getBoard(board.getID())).willReturn(board);
+        given(boardService.getBoard(board.getIdx())).willReturn(board);
 
-        mvc.perform(get("/board/" + board.getID().toString()))
+        mvc.perform(get("/board/" + board.getIdx().toString()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"id\":1")))
                 .andExpect(content().string(containsString("\"user\":\"Pyo\"")))
                 .andExpect(content().string(containsString("\"reported_date\":\"Tue Jan 19 2021 17:06:30 GMT+0900\"")))
                 .andExpect(content().string(containsString("\"content\":\"this is content\"")))
-                .andExpect(content().string(containsString("\"pictures\":[\"food\",\"background\"]")));
+                .andExpect(content().string(containsString("\"pictures\":[]")));
     }
 
     @Test
@@ -135,9 +158,6 @@ class BoardControllerTests {
         String user = "Pyo";
         String reported_date = "Tue Jan 19 2021 17:06:30 GMT+0900";
         String content = "My Favorite Color";
-        List<String> pictures = new ArrayList<>();
-        pictures.add("food");
-        pictures.add("background");
 
         mvc.perform(patch("/board/" + id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +169,7 @@ class BoardControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("{\"updated\":\"true\"}")));
 
-        verify(boardService).updateBoard(any(), any(), any(), any());
+        verify(boardService).updateBoard(any(), any());
     }
 
     @Test
@@ -163,25 +183,30 @@ class BoardControllerTests {
 
     @Test
     public void deleteBoardWithExistedID() throws Exception {
-        List<String> pictures = new ArrayList<>();
-        pictures.add("food");
-        pictures.add("background");
+        List<BoardPicture> pictures = new ArrayList<>();
+        pictures.add(BoardPicture.builder()
+                .idx(11)
+                .boardIdx(1)
+                .originalFileName("original_name")
+                .storedFilePath("image/")
+                .fileSize(200L)
+                .build());
 
         Board board = Board.builder()
-                .ID(1)
+                .idx(1)
                 .user("Pyo")
-                .reported_date("Tue Jan 19 2021 17:06:30 GMT+0900")
+                .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .pictures(pictures)
                 .build();
 
-        given(boardService.deleteBoard(board.getID())).willReturn(board);
+        given(boardService.deleteBoard(board.getIdx())).willReturn(board);
 
-        mvc.perform(delete("/board/" + board.getID().toString()))
+        mvc.perform(delete("/board/" + board.getIdx().toString()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("redirect:/")));
 
-        verify(boardService).deleteBoard(board.getID());
+        verify(boardService).deleteBoard(board.getIdx());
     }
 
     @Test

@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 public class BoardPicture {
     @Id
     @GeneratedValue
-    private Integer ID;
+    private Integer idx;
     @NotNull
     private Integer boardIdx;
 
@@ -27,9 +27,9 @@ public class BoardPicture {
     // 동일한 이름을 가진 파일이 업로드가 된다면 오류가 생긴다.
     // 이를 해결하기 위함
     @NotEmpty
-    private String original_file_name;
+    private String originalFileName;
     @NotEmpty
-    private String stored_file_path;
+    private String storedFilePath;
 
-    private long file_size;
+    private long fileSize;
 }

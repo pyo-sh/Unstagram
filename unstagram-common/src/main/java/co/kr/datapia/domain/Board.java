@@ -18,13 +18,13 @@ import java.util.List;
 public class Board {
     @Id
     @GeneratedValue
-    private Integer ID;
+    private Integer idx;
 
     @NotEmpty
     private String user;
 
     @Setter
-    private String reported_date;
+    private String reportedDate;
 
     @Setter
     @NotEmpty
