@@ -7,6 +7,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -123,7 +125,7 @@ class BoardServiceTests {
 
     // TODO : update 할 시 picture 이 없다면? X
     @Test
-    public void updateBoard() {
+    public void updateBoard() throws ParseException {
         Board board = this.mockBoards.get(0);
 
         given(boardRepository.findBoardByIdx(board.getIdx())).willReturn(Optional.of(board));
@@ -133,7 +135,9 @@ class BoardServiceTests {
                 "My Favorite Food"
         );
 
-        assertEquals(board.getReportedDate(), "Wed Jan 20 2021 17:00:00 GMT+0900");
+        Date nowDate = new Date();
+
+        assertEquals(board.getReportedDate(), nowDate.toString());
         assertEquals(board.getContent(), "My Favorite Food");
     }
 

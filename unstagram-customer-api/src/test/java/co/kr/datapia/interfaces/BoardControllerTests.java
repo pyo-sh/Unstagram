@@ -67,7 +67,7 @@ class BoardControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"idx\":" + board_id.toString())))
                 .andExpect(content().string(containsString("\"user\":\"" + user + "\"")))
-                .andExpect(content().string(containsString("\"reported_date\":\"" + reportedDate + "\"")))
+                .andExpect(content().string(containsString("\"reportedDate\":\"" + reportedDate + "\"")))
                 .andExpect(content().string(containsString("\"content\":\"" + content + "\"")))
                 .andExpect(content().string(containsString("\"pictures\":")));
         // TODO : pictures 를 확인 ?
@@ -77,25 +77,24 @@ class BoardControllerTests {
     public void createBoardWithValidData() throws Exception {
         given(boardService.addBoard(any(), any())).will(invocation -> {
             Board board = invocation.getArgument(0);
-            List<MultipartFile> files = invocation.getArgument(1);
-            List<BoardPicture> pictures = new FileHandler().parseFileInfo(1, files);
+//            List<MultipartFile> files = invocation.getArgument(1);
+//            List<BoardPicture> pictures = new FileHandler().parseFileInfo(1, files);
             return Board.builder()
                     .idx(1)
                     .user(board.getUser())
                     .reportedDate(board.getReportedDate())
                     .content(board.getContent())
-                    .pictures(pictures)
+                    //.pictures(pictures)
                     .build();
         });
 
         // TODO : pictures
 
         mvc.perform(post("/board")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":1, \"user\":\"Pyo\"," +
-                        " \"reported_date\":\"Tue Jan 19 2021 17:06:30 GMT+0900\"," +
-                        " \"content\":\"this is content\"," +
-                        " \"pictures\":[]}"))
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .param("user", "Pyo")
+                .param("content", "this is content")
+                .content("{}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/board/1"))
                 .andExpect(content().string("{}"));
@@ -122,10 +121,12 @@ class BoardControllerTests {
                 .fileSize(200L)
                 .build());
 
+        String reportedDate = new Date().toString();
+
         Board board = Board.builder()
                 .idx(1)
                 .user("Pyo")
-                .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
+                .reportedDate(reportedDate)
                 .content("this is content")
                 //.pictures(pictures)
                 .build();
@@ -134,11 +135,11 @@ class BoardControllerTests {
 
         mvc.perform(get("/board/" + board.getIdx().toString()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("\"id\":1")))
+                .andExpect(content().string(containsString("\"idx\":1")))
                 .andExpect(content().string(containsString("\"user\":\"Pyo\"")))
-                .andExpect(content().string(containsString("\"reported_date\":\"Tue Jan 19 2021 17:06:30 GMT+0900\"")))
-                .andExpect(content().string(containsString("\"content\":\"this is content\"")))
-                .andExpect(content().string(containsString("\"pictures\":[]")));
+                .andExpect(content().string(containsString("\"reportedDate\":\"" + reportedDate + "\"")))
+                .andExpect(content().string(containsString("\"content\":\"this is content\"")));
+                //.andExpect(content().string(containsString("\"pictures\":[]")));
     }
 
     @Test
@@ -156,16 +157,13 @@ class BoardControllerTests {
     public void updateBoardWithValidData() throws Exception {
         Integer id = 1;
         String user = "Pyo";
-        String reported_date = "Tue Jan 19 2021 17:06:30 GMT+0900";
         String content = "My Favorite Color";
 
         mvc.perform(patch("/board/" + id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"id\":" + id.toString()
-                        + ", \"user\":\"" + user
-                        + "\", \"reported_date\":\"" + reported_date
+                .content("{\"user\":\"" + user
                         + "\", \"content\":\"" + content
-                        + "\", \"pictures\":[\"food\", \"background\"]}"))
+                        + "\", \"pictures\":[]}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("{\"updated\":\"true\"}")));
 
