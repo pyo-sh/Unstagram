@@ -75,7 +75,7 @@ class BoardControllerTests {
 
     @Test
     public void createBoardWithValidData() throws Exception {
-        given(boardService.addBoard(any(), any())).will(invocation -> {
+        given(boardService.addBoard(any())).will(invocation -> {
             Board board = invocation.getArgument(0);
 //            List<MultipartFile> files = invocation.getArgument(1);
 //            List<BoardPicture> pictures = new FileHandler().parseFileInfo(1, files);
@@ -99,7 +99,7 @@ class BoardControllerTests {
                 .andExpect(header().string("location", "/board/1"))
                 .andExpect(content().string("{}"));
 
-        verify(boardService).addBoard(any(), any());
+        verify(boardService).addBoard(any());
     }
 
     @Test

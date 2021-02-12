@@ -16,6 +16,14 @@ spring:
 ---
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+---
+
+spring:
   profiles: mysql
   datasource:
     url: jdbc:mysql://${MYSQL_HOST}:3306/${MYSQL_DATABASE}

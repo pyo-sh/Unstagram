@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
 
 @Entity
@@ -30,9 +32,12 @@ public class Board {
     @NotEmpty
     private String content;
 
-    // TODO : List 형태는 Transient 로 DB 처리를 하지 않았다. 나중에 class 로 빼내어서 처리
     @Setter
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<BoardPicture> pictures;
+
+    @Setter
+    @Transient
+    private List<byte[]> images;
 }

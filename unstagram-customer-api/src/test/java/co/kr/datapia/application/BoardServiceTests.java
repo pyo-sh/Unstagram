@@ -32,7 +32,7 @@ class BoardServiceTests {
 
         mockBoardRepository();
 
-        boardService = new BoardService(boardRepository, boardPictureRepository);
+        boardService = new BoardService(boardRepository);
     }
     // 모든 테스트에서 boardRepository 안에 이 mock 객체가 들어가서 Test 될 것이다
 
@@ -97,7 +97,7 @@ class BoardServiceTests {
 
         List<MultipartFile> files = new ArrayList<>();
 
-        Board created = boardService.addBoard(board, files);
+        Board created = boardService.addBoard(board);
 
         assertEquals(created.getIdx(), 1);
         assertEquals(created.getUser(), user);

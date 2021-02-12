@@ -14,54 +14,24 @@ import java.util.List;
 public class BoardService {
     private BoardRepository boardRepository;
 
-    private BoardPictureRepository boardPictureRepository;
-
-    private FileHandler fileHandler;
-
     @Autowired
-    public BoardService(BoardRepository boardRepository, BoardPictureRepository boardPictureRepository) {
+    public BoardService(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
-        this.boardPictureRepository = boardPictureRepository;
-        this.fileHandler = new FileHandler();
     }
 
     public List<Board> getBoards() {
         return boardRepository.findAll();
     }
 
-    public Board addBoard(
-            Board board,
-            List<MultipartFile> files
-    ) throws Exception {
-        // ID 를 생성한 것을 사용하기 위해 미리 저장하고 그것을 수정
+    public Board addBoard(Board board){
         board.setReportedDate(new Date().toString());
-        Board returnBoard = boardRepository.save(board);
 
-        // 파일을 저장하고 그 BoardPicture 에 대한 list 를 가지고 있는다
-        List<BoardPicture> list = fileHandler.parseFileInfo(returnBoard.getIdx(), files);
-
-        if(list.isEmpty()){
-            // TODO : 파일이 없을 땐 어떻게 해야할까.. 고민을 해보아야 할 것
-        }
-        // 파일에 대해 DB에 저장하고 가지고 있을 것
-        else{
-            List<BoardPicture> pictureBeans = new ArrayList<>();
-            for(BoardPicture boardPicture : list) {
-                pictureBeans.add(boardPictureRepository.save(boardPicture));
-            }
-            returnBoard.setPictures(pictureBeans);
-        }
-
-        return returnBoard;
+        return boardRepository.save(board);
     }
 
     public Board getBoard(Integer id){
         Board board = boardRepository.findBoardByIdx(id)
                 .orElseThrow(() -> new BoardNotFoundException(id));
-
-        // TODO : pictures 에 대한 정보..?
-//        List<BoardPicture> pictures = boardPictureRepository.findAllByBoardIdx(id);
-//        board.setPictures(pictures);
 
         return board;
     }

@@ -1,11 +1,16 @@
 package co.kr.datapia.domain;
 
+import org.apache.tomcat.util.http.fileupload.FileItem;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.File;
+import java.io.*;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +19,44 @@ import java.util.List;
 
 @Component
 public class FileHandler {
+    // BoardPicture 객체를 받고 MultipartFile 로 반환한다.
+    public List<File> parseMultipartFile(List<BoardPicture> boardPictures){
+        // 변환을 할 파일 리스트
+        List<File> fileList = new ArrayList<>();
+
+        if(boardPictures.isEmpty()){
+            return fileList;
+        }
+
+        String absolutePath = new File("").getAbsolutePath() + "\\";
+        for(BoardPicture boardPicture : boardPictures){
+            // String fileName = boardPicture.getOriginalFileName();
+            String path = boardPicture.getStoredFilePath();
+//            try {
+//                File file = new File(absolutePath + path);
+//                FileItem fileItem = new DiskFileItem(
+//                        "file",
+//                        "text/plain",
+//                        false,
+//                        file.getName(),
+//                        (int) file.length(),
+//                        file.getParentFile()
+//                );
+//                fileItem.getOutputStream();
+//                MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            File file = new File(absolutePath + path);
+            if(file.isFile() && file.exists()){
+                fileList.add(file);
+            }
+        }
+
+        return fileList;
+    }
+
+    // MultipartFile 을 받아서 BoardPicture 객체로 변경한다
     public List<BoardPicture> parseFileInfo(
             Integer boardID,
             List<MultipartFile> multipartFiles
