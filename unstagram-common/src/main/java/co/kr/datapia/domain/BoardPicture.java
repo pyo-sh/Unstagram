@@ -1,15 +1,14 @@
 package co.kr.datapia.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Builder
@@ -32,4 +31,8 @@ public class BoardPicture {
     private String storedFilePath;
 
     private long fileSize;
+
+    @Setter
+    @Transient
+    private byte[] images;
 }

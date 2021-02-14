@@ -36,8 +36,4 @@ public class Board {
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<BoardPicture> pictures;
-
-    @Setter
-    @Transient
-    private List<byte[]> images;
 }

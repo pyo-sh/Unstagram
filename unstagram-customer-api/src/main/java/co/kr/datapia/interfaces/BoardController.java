@@ -52,7 +52,7 @@ public class BoardController {
             @PathVariable Integer boardID
     ) throws IOException {
         Board board = boardService.getBoard(boardID);
-        board.setImages(boardPictureService.getBoardPictures(boardID));
+        board.setPictures(boardPictureService.getBoardPictures(boardID));
         return board;
     }
 

@@ -4,9 +4,7 @@ import co.kr.datapia.domain.BoardPicture;
 import co.kr.datapia.domain.BoardPictureRepository;
 import co.kr.datapia.domain.FileHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -46,24 +44,23 @@ public class BoardPictureService {
         return boardPictures;
     }
 
-    public List<byte[]> getBoardPictures(Integer board_id) throws IOException {
+    public List<BoardPicture> getBoardPictures(Integer board_id) throws IOException {
         List<BoardPicture> list = boardPictureRepository.findAllByBoardIdx(board_id);
 
         //List<File> images = fileHandler.parseMultipartFile(list);
 
         String absolutePath = new File("").getAbsolutePath() + "\\";
 
-        List<byte[]> images = new ArrayList<>();
         for(BoardPicture boardPicture : list){
             BufferedImage originalImage = ImageIO.read(new File(absolutePath + boardPicture.getStoredFilePath()));
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(originalImage, "jpeg", baos);
             baos.flush();
 
-            images.add(baos.toByteArray());
+            boardPicture.setImages(baos.toByteArray());
         }
 
-        return images;
+        return list;
     }
 
     public List<BoardPicture> updateBoardPictures(
