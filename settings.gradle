@@ -1,4 +1,0 @@
-rootProject.name = 'unstagram'
-
-include 'unstagram-customer-api'
-include 'unstagram-common'
