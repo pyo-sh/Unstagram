@@ -18,13 +18,6 @@ const SignInBox = styled.div`
         margin: 22px auto 12px;
 
         font-size: 42px;
-
-        // 드래그 못하게
-        -ms-user-select: none; 
-        -moz-user-select: -moz-none;
-        -khtml-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
     }
 
     .SignIn-Form{

@@ -23,9 +23,17 @@ const GlobalStyle = createGlobalStyle`
   }
   .Unstagram-Title{
     font-family: 'Dancing Script', cursive;
+
+    // 드래그 못하게
+    -ms-user-select: none; 
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
   .App{
     width: 100vw;
+    flex-direction: column;
     justify-content:center;
     align-items:center;
   }
