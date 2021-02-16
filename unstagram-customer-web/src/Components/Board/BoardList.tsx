@@ -6,6 +6,12 @@ const BoardList: React.FC = () => {
   return (
     <BoardListBox>
       <BoardItem></BoardItem>
+      <BoardItem></BoardItem>
+      <BoardItem></BoardItem>
+      <BoardItem></BoardItem>
+      <BoardItem></BoardItem>
+      <BoardItem></BoardItem>
+      <BoardItem></BoardItem>
     </BoardListBox>
   );
 }

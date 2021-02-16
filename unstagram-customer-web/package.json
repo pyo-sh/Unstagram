@@ -1,6 +1,7 @@
 {
   "name": "unstagram-customer-web",
   "version": "0.1.0",
+  "main": "index.js",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
@@ -9,7 +10,10 @@
     "@types/jest": "^26.0.20",
     "@types/node": "^12.20.0",
     "@types/react-dom": "^17.0.1",
+    "axios": "^0.21.1",
+    "babel-plugin-styled-components": "^1.12.0",
     "cross-env": "^7.0.3",
+    "next": "^10.0.7",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.2",
@@ -17,9 +21,9 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "start": "cross-env NODE_PATH=src/ react-scripts start",
-    "build": "cross-env NODE_PATH=src/ react-scripts build",
-    "test": "react-scripts test",
+    "dev": "cross-env NODE_PATH=src/ next dev",
+    "build": "cross-env NODE_PATH=src/ next build",
+    "start": "next start",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

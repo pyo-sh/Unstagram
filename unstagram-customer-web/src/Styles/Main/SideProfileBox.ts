@@ -5,6 +5,9 @@ const SideProfileBox = styled.div`
 
     flex-direction: column;
 
+    position: relative;
+    
+
     .SideProfile-User{
         height: 56px;
 
