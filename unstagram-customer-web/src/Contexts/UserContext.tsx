@@ -71,7 +71,7 @@ export function useUserDispatch(){
 
 // Provider(Component) --------------------------------------------
 
-export function UserContextProvider({ children }: { children: React.ReactNode }): React.ReactNode{
+export function UserContextProvider({ children }: { children: React.ReactNode }): JSX.Element{
     const [user, dispatch] = useReducer(userReducer, initialState);
 
     return (

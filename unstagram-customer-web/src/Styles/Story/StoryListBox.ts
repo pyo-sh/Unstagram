@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const StoryListBox = styled.div`
-    max-width: 612px;
     width: 100%;
     height: 118px;
     padding: 16px 0;

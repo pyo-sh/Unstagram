@@ -6,11 +6,12 @@ const HeaderBox = styled.div`
     justify-content: center;
     align-items: center;
 
-    /* position: fixed;
+    position: fixed;
     top: 0;
-    z-index: 3; */
+    z-index: 3;
 
     border-bottom: 1px solid rgba(var(--b6a,219,219,219),1);
+    background-color: rgba(var(--d87,255,255,255),1);
 
     .Header-Wrapper{
         max-width: 975px;
