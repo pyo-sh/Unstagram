@@ -1,12 +1,23 @@
 import styled from 'styled-components';
 
-const SideProfileBox = styled.div`
+export const SideProfileWrapper = styled.div`
     width: 293px;
+    height: 0px;
+`;
 
+interface styleProp {
+    windowWidth: number
+};
+
+const SideProfileBox = styled.div<styleProp>`
+    width: 293px;
+    height: 100vh;
+    
     flex-direction: column;
 
-    position: relative;
-    
+    position: fixed;
+    top: 88px;
+    left: ${(props) => (props.windowWidth - 935) / 2 + 642}px;
 
     .SideProfile-User{
         height: 56px;
