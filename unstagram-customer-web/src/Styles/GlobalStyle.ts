@@ -16,6 +16,10 @@ const GlobalStyle = createGlobalStyle`
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: rgba(var(--b3f,250,250,250),1);
+  }
+  script{
+    display: none;
   }
   .Unstagram-Title{
     font-family: 'Dancing Script', cursive;
