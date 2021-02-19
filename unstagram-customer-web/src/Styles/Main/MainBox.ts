@@ -11,7 +11,6 @@ const MainBox = styled.div`
 
         .Main-Scroll{
             max-width: 614px;
-            margin-right: 28px;
 
             flex-direction: column;
         }

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 export const SideProfileWrapper = styled.div`
     width: 293px;
     height: 0px;
+
+    margin-left: 28px;
 `;
 
 interface styleProp {
@@ -12,6 +14,7 @@ interface styleProp {
 const SideProfileBox = styled.div<styleProp>`
     width: 293px;
     height: 100vh;
+    margin-left: 28px;
     
     flex-direction: column;
 

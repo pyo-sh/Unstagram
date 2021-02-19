@@ -1,4 +1,4 @@
-import { NextComponentType } from 'next';
+import { NextComponentType, InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import { AppContext, AppInitialProps, AppProps } from 'next/app';
 import Head from 'next/head';
 import { UserContextProvider } from 'Contexts/UserContext';
@@ -20,14 +20,14 @@ const App: NextComponentType<AppContext, AppInitialProps, AppProps> = ({ Compone
   </>
 }
 
-App.getInitialProps = async ({ Component, ctx }: AppContext): Promise<AppInitialProps> => {
-    let pageProps = {};
+// App.getInitialProps = async ({ Component, ctx }: AppContext): Promise<AppInitialProps> => {
+//     let pageProps = {};
 
-    if (Component.getInitialProps) {
-        pageProps = await Component.getInitialProps(ctx);
-    }
+//     if (Component.getInitialProps) {
+//         pageProps = await Component.getInitialProps(ctx);
+//     }
 
-    return { pageProps };
-}
+//     return { pageProps };
+// }
 
 export default App;
