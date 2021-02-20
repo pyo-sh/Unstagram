@@ -1,6 +1,9 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
+import UserPageBox from 'Styles/Pages/UserPageBox';
 import Profile from 'Components/Profile/Profile'
+import ProfileCategory from 'Components/Profile/ProfileCategory';
+
 
 // export const getStaticPaths: GetStaticPaths = async (context) => {
 //   return {
@@ -29,11 +32,10 @@ const UserPage = () => {
   const { user } = router.query;
 
   return (
-    <>
-    {user}
-    {router.asPath}
-    <Profile/>
-    </>
+    <UserPageBox>
+      <Profile/>
+      <ProfileCategory/>
+    </UserPageBox>
   );
 };
 

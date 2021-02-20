@@ -1,10 +1,12 @@
 import React from 'react';
 import ProfileButtonsBox, { buttonIcon } from 'Styles/Profile/ProfileButtonsBox';
 
-const ProfileButtons: React.FC = () => {
-    const isMe: boolean = false;
-    const isFollowing: boolean = true;
+interface PropTypes {
+    isMe: boolean
+    isFollowing: boolean
+}
 
+const ProfileButtons: React.FC<PropTypes> = ({ isMe, isFollowing }) => {
     return (
         <ProfileButtonsBox>
             <h2 className="ProfileButtons-Identification">

@@ -82,6 +82,7 @@ const ProfileButtonsBox = styled.div`
 
         .ProfileButtons-Functions-Default{
             padding: 5px 9px;
+            white-space: nowrap;
         }
 
         .ProfileButtons-Functions-Button-Following{

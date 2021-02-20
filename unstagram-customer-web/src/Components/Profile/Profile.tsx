@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ProfileBox from 'Styles/Profile/ProfileBox';
 import ProfileButtons from 'Components/Profile/ProfileButtons';
 import ProfileImage from 'Components/Profile/ProfileImage';
 import ProfileFollow from 'Components/Profile/ProfileFollow';
-
-import { useMediaQuery } from 'react-responsive'
+import { checkWidthDevice } from 'Contexts/WindowSize';
 
 const Profile: React.FC = () => {
-    const isDesktop: boolean = useMediaQuery({ minWidth: 736 })
+    const isMe: boolean = false;
+    const isFollowing: boolean = true;
+    const isDesktop = checkWidthDevice();
 
     const Desktop: React.FC = ({ children }) => {
         return <React.Fragment>
@@ -26,13 +27,16 @@ const Profile: React.FC = () => {
             <section className="Profile-Wrapper">
                 <ProfileImage/>
                 <section className="Profile-About">
-                    <ProfileButtons/>
+                    <ProfileButtons
+                        isMe={isMe}
+                        isFollowing={isFollowing}
+                        />
                     <Desktop>
                         <ProfileFollow/>
-                    <section className="Profile-Detail">
-                        <h1 className="Profile-Detail-Name">이름</h1>
-                        <span className="Profile-Detail-Explain">나의 설명~~</span>
-                    </section>
+                        <section className="Profile-Detail">
+                            <h1 className="Profile-Detail-Name">이름</h1>
+                            <span className="Profile-Detail-Explain">나의 설명~~</span>
+                        </section>
                     </Desktop>
                 </section>
             </section>

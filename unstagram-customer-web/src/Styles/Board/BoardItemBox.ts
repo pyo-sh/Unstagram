@@ -10,6 +10,8 @@ const BoardItemBox = styled.article`
     border: 1px solid rgba(var(--b6a,219,219,219),1);
     border-radius: 3px;
 
+    background: #ffffff;
+
     .BoardItem-Image-Wrapper{
         width: 100%;
     }

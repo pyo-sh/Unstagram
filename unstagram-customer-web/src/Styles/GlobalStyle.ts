@@ -5,10 +5,11 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     box-sizing: border-box;
   }
-  head{
+  head, script{
     display:none;
   }
   body{
+    min-height: 100vh;
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -17,9 +18,6 @@ const GlobalStyle = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: rgba(var(--b3f,250,250,250),1);
-  }
-  script{
-    display: none;
   }
   .Unstagram-Title{
     font-family: 'Dancing Script', cursive;
@@ -30,12 +28,6 @@ const GlobalStyle = createGlobalStyle`
     -khtml-user-select: none;
     -webkit-user-select: none;
     user-select: none;
-  }
-  .App{
-    width: 100vw;
-    flex-direction: column;
-    justify-content:center;
-    align-items:center;
   }
 `;
 
