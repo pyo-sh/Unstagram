@@ -11,8 +11,8 @@ const ProfileBox = styled.div`
         margin: 0 0 44px 0;
     }
     @media(max-width: 735px){
-        height: 82px;
         .Profile-Wrapper{
+            height: 82px;
             margin: 16px 16px 24px 16px;
         }
         .Profile-Detail{
@@ -30,6 +30,10 @@ const ProfileBox = styled.div`
         flex-grow: 1;
         height: 100%;
         flex-direction: column;
+    }
+
+    .Profile-Wrapper{
+        align-items: center;
     }
 
     .Profile-Detail{
