@@ -7,10 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +25,12 @@ public class BoardPictureService {
         this.fileHandler = new FileHandler();
     }
 
+    public byte[] getBytePicture(Integer boardPictureID) throws IOException {
+        BoardPicture boardPicture = boardPictureRepository.findByIdx(boardPictureID);
+
+        return fileHandler.parseByteFile(boardPicture);
+    }
+
     public List<BoardPicture> addBoardPictures(
             Integer board_id,
             List<MultipartFile> files
@@ -44,21 +46,8 @@ public class BoardPictureService {
         return boardPictures;
     }
 
-    public List<BoardPicture> getBoardPictures(Integer board_id) throws IOException {
+    public List<BoardPicture> getBoardPictures(Integer board_id) {
         List<BoardPicture> list = boardPictureRepository.findAllByBoardIdx(board_id);
-
-        //List<File> images = fileHandler.parseMultipartFile(list);
-
-        String absolutePath = new File("").getAbsolutePath() + "\\";
-
-        for(BoardPicture boardPicture : list){
-            BufferedImage originalImage = ImageIO.read(new File(absolutePath + boardPicture.getStoredFilePath()));
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(originalImage, "jpeg", baos);
-            baos.flush();
-
-            boardPicture.setImages(baos.toByteArray());
-        }
 
         return list;
     }

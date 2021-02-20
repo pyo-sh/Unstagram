@@ -4,14 +4,11 @@ import co.kr.datapia.application.BoardPictureService;
 import co.kr.datapia.application.BoardService;
 import co.kr.datapia.domain.Board;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -26,7 +23,11 @@ public class BoardController {
 
     @GetMapping("/boards")
     public List<Board> list () {
-        return boardService.getBoards();
+        List<Board> boards = boardService.getBoards();
+        for(Board board : boards){
+            board.setPictures(boardPictureService.getBoardPictures(board.getIdx()));
+        }
+        return boards;
     }
 
     @PostMapping("/board")
@@ -50,7 +51,7 @@ public class BoardController {
     @GetMapping("/board/{boardID}")
     public Board readBoard(
             @PathVariable Integer boardID
-    ) throws IOException {
+    ){
         Board board = boardService.getBoard(boardID);
         board.setPictures(boardPictureService.getBoardPictures(boardID));
         return board;

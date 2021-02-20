@@ -8,4 +8,6 @@ public interface BoardPictureRepository extends CrudRepository<BoardPicture, Int
     BoardPicture save(BoardPicture boardPicture);
 
     List<BoardPicture> findAllByBoardIdx(Integer boardIdx);
+
+    BoardPicture findByIdx(Integer boardPictureIdx);
 }

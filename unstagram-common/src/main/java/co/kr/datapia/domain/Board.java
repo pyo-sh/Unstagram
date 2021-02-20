@@ -8,8 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.List;
 
 @Entity

@@ -1,12 +1,13 @@
 package co.kr.datapia.application;
 
-import co.kr.datapia.domain.*;
+import co.kr.datapia.domain.Board;
+import co.kr.datapia.domain.BoardNotFoundException;
+import co.kr.datapia.domain.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,10 @@ public class BoardService {
     }
 
     public Board addBoard(Board board){
-        board.setReportedDate(new Date().toString());
+        Date thisTime = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+        board.setReportedDate(thisTime.toString() + "T" + dateFormat.format(thisTime));
 
         return boardRepository.save(board);
     }
@@ -44,7 +48,11 @@ public class BoardService {
         // if 처리는 안전함을 위해 적어두었다
         if (board != null){
             board.setContent(content);
-            board.setReportedDate(new Date().toString());
+
+            Date thisTime = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+            board.setReportedDate(thisTime.toString() + "T" + dateFormat.format(thisTime));
         }
 
         return board;

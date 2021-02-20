@@ -1,16 +1,11 @@
 package co.kr.datapia.domain;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,41 +14,25 @@ import java.util.List;
 
 @Component
 public class FileHandler {
-    // BoardPicture 객체를 받고 MultipartFile 로 반환한다.
-    public List<File> parseMultipartFile(List<BoardPicture> boardPictures){
-        // 변환을 할 파일 리스트
-        List<File> fileList = new ArrayList<>();
-
-        if(boardPictures.isEmpty()){
-            return fileList;
+    // BoardPicture 객체를 받아서 byte[]를 반환한다.
+    public byte[] parseByteFile(BoardPicture boardPicture) throws IOException {
+        if(boardPicture == null || boardPicture.getStoredFilePath() == null){
+            return null;
         }
 
-        String absolutePath = new File("").getAbsolutePath() + "\\";
-        for(BoardPicture boardPicture : boardPictures){
-            // String fileName = boardPicture.getOriginalFileName();
-            String path = boardPicture.getStoredFilePath();
-//            try {
-//                File file = new File(absolutePath + path);
-//                FileItem fileItem = new DiskFileItem(
-//                        "file",
-//                        "text/plain",
-//                        false,
-//                        file.getName(),
-//                        (int) file.length(),
-//                        file.getParentFile()
-//                );
-//                fileItem.getOutputStream();
-//                MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-            File file = new File(absolutePath + path);
-            if(file.isFile() && file.exists()){
-                fileList.add(file);
-            }
-        }
+        String absolutePath = System.getProperty("user.dir") + "\\";
+        InputStream imageStream = new FileInputStream(absolutePath + boardPicture.getStoredFilePath());
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-        return fileList;
+        int nRead;
+        byte[] data = new byte[16384];
+
+        while ((nRead = imageStream.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+        imageStream.close();
+
+        return buffer.toByteArray();
     }
 
     // MultipartFile 을 받아서 BoardPicture 객체로 변경한다
@@ -74,11 +53,14 @@ public class FileHandler {
         String current_date = simpleDateFormat.format(new Date());
 
         // 프로젝트 폴더에 저장하기 위해 절대경로를 설정 (Window 의 Tomcat 은 Temp 파일을 이용한다)
-        String absolutePath = new File("").getAbsolutePath() + "\\";
+        String absolutePath = System.getProperty("user.dir") + "\\";
+        System.out.println(absolutePath);
+
 
         // 경로를 지정하고 그곳에다가 저장할 심산이다
         String path = "images/" + current_date;
         File file = new File(path);
+
         // 저장할 위치의 디렉토리가 존지하지 않을 경우
         if(!file.exists()){
             // mkdir() 함수와 다른 점은 상위 디렉토리가 존재하지 않을 때 그것까지 생성
