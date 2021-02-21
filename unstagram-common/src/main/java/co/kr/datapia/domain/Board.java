@@ -1,15 +1,10 @@
 package co.kr.datapia.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.List;
 
 @Entity
@@ -17,6 +12,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "pictures")
+@Table(name="tb_board")
 public class Board {
     @Id
     @GeneratedValue
@@ -33,7 +30,7 @@ public class Board {
     private String content;
 
     @Setter
-    @Transient
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @OneToMany(mappedBy="board")
+    @JsonManagedReference
     private List<BoardPicture> pictures;
 }
