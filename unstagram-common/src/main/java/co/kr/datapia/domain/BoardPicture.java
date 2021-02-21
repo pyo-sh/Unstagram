@@ -1,28 +1,29 @@
 package co.kr.datapia.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = "board")
+@Table(name="tb_board_pic")
 public class BoardPicture {
     @Id
     @GeneratedValue
     private Integer idx;
-    @NotNull
-    private Integer boardIdx;
+    //@JsonIgnore
+    @Setter
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name="board_idx")
+    private Board board;
 
     // 원본 파일이름 과 서버에 저장된 파일 경로 를 분리한 이유?
     // 동일한 이름을 가진 파일이 업로드가 된다면 오류가 생긴다.

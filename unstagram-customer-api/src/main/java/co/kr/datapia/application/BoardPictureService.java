@@ -1,8 +1,6 @@
 package co.kr.datapia.application;
 
-import co.kr.datapia.domain.BoardPicture;
-import co.kr.datapia.domain.BoardPictureRepository;
-import co.kr.datapia.domain.FileHandler;
+import co.kr.datapia.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,17 +24,18 @@ public class BoardPictureService {
     }
 
     public byte[] getBytePicture(Integer boardPictureID) throws IOException {
-        BoardPicture boardPicture = boardPictureRepository.findByIdx(boardPictureID);
+        BoardPicture boardPicture = boardPictureRepository.findByIdx(boardPictureID)
+                .orElseThrow(() -> new BoardNotFoundException(boardPictureID));
 
         return fileHandler.parseByteFile(boardPicture);
     }
 
     public List<BoardPicture> addBoardPictures(
-            Integer board_id,
+            Board board,
             List<MultipartFile> files
     ) throws Exception {
         // 파일을 저장하고 그 BoardPicture 에 대한 list 를 가지고 있는다
-        List<BoardPicture> list = fileHandler.parseFileInfo(board_id, files);
+        List<BoardPicture> list = fileHandler.parseFileInfo(board, files);
 
         List<BoardPicture> boardPictures = new ArrayList<>();
         for(BoardPicture boardPicture : list) {

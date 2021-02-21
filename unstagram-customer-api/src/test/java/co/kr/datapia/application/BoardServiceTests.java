@@ -1,20 +1,20 @@
 package co.kr.datapia.application;
 
-import co.kr.datapia.domain.*;
+import co.kr.datapia.domain.Board;
+import co.kr.datapia.domain.BoardNotFoundException;
+import co.kr.datapia.domain.BoardPicture;
+import co.kr.datapia.domain.BoardRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -23,8 +23,6 @@ class BoardServiceTests {
     private BoardService boardService;
     @Mock
     private BoardRepository boardRepository;
-    @Mock
-    private BoardPictureRepository boardPictureRepository;
 
     @BeforeEach
     public void setUp () {
@@ -43,7 +41,6 @@ class BoardServiceTests {
         List<BoardPicture> pictures = new ArrayList<>();
         pictures.add(BoardPicture.builder()
                 .idx(11)
-                .boardIdx(1)
                 .originalFileName("original_name")
                 .storedFilePath("image/")
                 .fileSize(200L)
@@ -58,6 +55,8 @@ class BoardServiceTests {
                 .pictures(pictures)
                 .build());
 
+        pictures.get(0).setBoard(this.mockBoards.get(0));
+
         // Interfaces 에 대한 given 및 willReturn 설정
         given(boardRepository.findAll()).willReturn(this.mockBoards);
         given(boardRepository.findBoardByIdx(1)).willReturn(java.util.Optional.of(this.mockBoards.get(0)));
@@ -67,13 +66,28 @@ class BoardServiceTests {
     public void getBoards() {
         // Service 에서 레파지토리의 boards 를 받으면 0번 째 순위는?
         List<Board> boards = boardService.getBoards();
+        verify(boardRepository).findAll();
         Board board = boards.get(0);
 
         assertEquals(board.getIdx(), 1);
+        assertEquals(board.getUser(), "Pyo");
+        assertEquals(board.getReportedDate(), "Tue Jan 19 2021 17:06:30 GMT+0900");
+        assertEquals(board.getContent(), "this is content");
+
+        // Board Picture 와의 연결에 대해서 Test
+        List<BoardPicture> boardPictures = board.getPictures();
+        BoardPicture boardPicture = boardPictures.get(0);
+
+        assertEquals(boardPicture.getIdx(), 11);
+        assertEquals(boardPicture.getOriginalFileName(), "original_name");
+        assertEquals(boardPicture.getStoredFilePath(), "image/");
+        assertEquals(boardPicture.getFileSize(), 200L);
+        // BoardPicture 에서 board idx 를 통해 찾을 수 있을까
+        assertEquals(boardPicture.getBoard().getIdx(), 1);
     }
 
     @Test
-    public void addBoard() throws Exception {
+    public void addBoard() {
         given(boardRepository.save(any())).will(invocation -> {
             Board board = invocation.getArgument(0);
             return Board.builder()
@@ -81,33 +95,22 @@ class BoardServiceTests {
                     .user(board.getUser())
                     .reportedDate(board.getReportedDate())
                     .content(board.getContent())
-                    .pictures(board.getPictures())
                     .build();
         });
 
-        String user = "Pyo";
-        String content = "this is content";
-        String reportedDate = new Date().toString();
+        Board board = boardService.addBoard(this.mockBoards.get(0));
+        verify(boardRepository).save(this.mockBoards.get(0));
 
-        Board board = Board.builder()
-                .user(user)
-                .content(content)
-                .reportedDate(reportedDate)
-                .build();
-
-        List<MultipartFile> files = new ArrayList<>();
-
-        Board created = boardService.addBoard(board);
-
-        assertEquals(created.getIdx(), 1);
-        assertEquals(created.getUser(), user);
-        assertEquals(created.getContent(), content);
-        assertEquals(created.getReportedDate(), reportedDate);
+        assertEquals(board.getIdx(), 1);
+        assertEquals(board.getUser(), "Pyo");
+        assertEquals(board.getReportedDate(), new Date().toString());
+        assertEquals(board.getContent(), "this is content");
     }
 
     @Test
     public void getBoardWithExistedID() {
         Board board = boardService.getBoard(1);
+        verify(boardRepository).findBoardByIdx(board.getIdx());
 
         Board expectedBoard = this.mockBoards.get(0);
 
@@ -115,7 +118,20 @@ class BoardServiceTests {
         assertEquals(board.getUser(), expectedBoard.getUser());
         assertEquals(board.getReportedDate(), expectedBoard.getReportedDate());
         assertEquals(board.getContent(), expectedBoard.getContent());
-        assertTrue(board.getPictures().containsAll(expectedBoard.getPictures()));
+
+        // Board Picture 와의 연결에 대해서 Test
+        List<BoardPicture> boardPictures = board.getPictures();
+        BoardPicture boardPicture = boardPictures.get(0);
+
+        List<BoardPicture> expectedBoardPictures = expectedBoard.getPictures();
+        BoardPicture expectedBoardPicture = expectedBoardPictures.get(0);
+
+        assertEquals(boardPicture.getIdx(), expectedBoardPicture.getIdx());
+        assertEquals(boardPicture.getOriginalFileName(), expectedBoardPicture.getOriginalFileName());
+        assertEquals(boardPicture.getStoredFilePath(), expectedBoardPicture.getStoredFilePath());
+        assertEquals(boardPicture.getFileSize(), expectedBoardPicture.getFileSize());
+        // BoardPicture 에서 board idx 를 통해 찾을 수 있을까
+        assertEquals(boardPicture.getBoard().getIdx(), expectedBoardPicture.getBoard().getIdx());
     }
 
     @Test
@@ -125,19 +141,16 @@ class BoardServiceTests {
 
     // TODO : update 할 시 picture 이 없다면? X
     @Test
-    public void updateBoard() throws ParseException {
+    public void updateBoard() {
         Board board = this.mockBoards.get(0);
-
-        given(boardRepository.findBoardByIdx(board.getIdx())).willReturn(Optional.of(board));
 
         boardService.updateBoard(
                 board.getIdx(),
                 "My Favorite Food"
         );
+        verify(boardRepository).findBoardByIdx(board.getIdx());
 
-        Date nowDate = new Date();
-
-        assertEquals(board.getReportedDate(), nowDate.toString());
+        assertEquals(board.getReportedDate(), new Date().toString());
         assertEquals(board.getContent(), "My Favorite Food");
     }
 

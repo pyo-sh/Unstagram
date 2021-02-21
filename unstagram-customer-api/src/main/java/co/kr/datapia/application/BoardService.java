@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -25,10 +24,7 @@ public class BoardService {
     }
 
     public Board addBoard(Board board){
-        Date thisTime = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        board.setReportedDate(thisTime.toString() + "T" + dateFormat.format(thisTime));
+        board.setReportedDate(new Date().toString());
 
         return boardRepository.save(board);
     }
@@ -48,11 +44,7 @@ public class BoardService {
         // if 처리는 안전함을 위해 적어두었다
         if (board != null){
             board.setContent(content);
-
-            Date thisTime = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-            board.setReportedDate(thisTime.toString() + "T" + dateFormat.format(thisTime));
+            board.setReportedDate(new Date().toString());
         }
 
         return board;

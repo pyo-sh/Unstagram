@@ -24,9 +24,6 @@ public class BoardController {
     @GetMapping("/boards")
     public List<Board> list () {
         List<Board> boards = boardService.getBoards();
-        for(Board board : boards){
-            board.setPictures(boardPictureService.getBoardPictures(board.getIdx()));
-        }
         return boards;
     }
 
@@ -42,7 +39,7 @@ public class BoardController {
                 .content(content)
                 .build());
 
-        boardPictureService.addBoardPictures(board.getIdx(), files);
+        boardPictureService.addBoardPictures(board, files);
 
         URI uriLocation = new URI("/board/" + board.getIdx());
         return ResponseEntity.created(uriLocation).body("{}");
@@ -53,7 +50,6 @@ public class BoardController {
             @PathVariable Integer boardID
     ){
         Board board = boardService.getBoard(boardID);
-        board.setPictures(boardPictureService.getBoardPictures(boardID));
         return board;
     }
 
