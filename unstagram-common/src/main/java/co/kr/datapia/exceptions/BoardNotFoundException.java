@@ -1,4 +1,4 @@
-package co.kr.datapia.domain;
+package co.kr.datapia.exceptions;
 
 public class BoardNotFoundException extends RuntimeException {
     public BoardNotFoundException(Integer id) {

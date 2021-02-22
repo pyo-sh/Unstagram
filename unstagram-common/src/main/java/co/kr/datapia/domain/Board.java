@@ -1,5 +1,6 @@
 package co.kr.datapia.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -19,8 +20,10 @@ public class Board {
     @GeneratedValue
     private Integer idx;
 
-    @NotEmpty
-    private String user;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name="user_idx")
+    private User user;
 
     @Setter
     private String reportedDate;

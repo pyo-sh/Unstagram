@@ -1,9 +1,9 @@
 package co.kr.datapia.interfaces;
 
 import co.kr.datapia.application.BoardPictureService;
-import co.kr.datapia.domain.BoardNotFoundException;
+import co.kr.datapia.exceptions.BoardNotFoundException;
 import co.kr.datapia.domain.BoardPicture;
-import co.kr.datapia.domain.FileHandler;
+import co.kr.datapia.utils.FileHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,8 @@
-package co.kr.datapia.domain;
+package co.kr.datapia.utils;
 
+import co.kr.datapia.domain.Board;
+import co.kr.datapia.domain.BoardPicture;
+import co.kr.datapia.utils.FileHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -58,7 +61,6 @@ class FileHandlerTests {
     void parseFileInfo() throws Exception {
         Board board = Board.builder()
             .idx(1)
-            .user("Pyo")
             .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
             .content("this is content")
             .build();

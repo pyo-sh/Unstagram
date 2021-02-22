@@ -3,7 +3,7 @@ package co.kr.datapia.application;
 import co.kr.datapia.domain.Board;
 import co.kr.datapia.domain.BoardPicture;
 import co.kr.datapia.domain.BoardPictureRepository;
-import co.kr.datapia.domain.FileHandler;
+import co.kr.datapia.utils.FileHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -45,7 +45,6 @@ class BoardPictureServiceTests {
     private void mockBoardPictureRepository () {
         Board board = Board.builder()
                 .idx(1)
-                .user("Pyo")
                 .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .build();

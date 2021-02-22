@@ -1,7 +1,7 @@
 package co.kr.datapia.application;
 
 import co.kr.datapia.domain.Board;
-import co.kr.datapia.domain.BoardNotFoundException;
+import co.kr.datapia.exceptions.BoardNotFoundException;
 import co.kr.datapia.domain.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

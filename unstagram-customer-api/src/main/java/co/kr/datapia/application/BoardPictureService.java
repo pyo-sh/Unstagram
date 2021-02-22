@@ -1,6 +1,8 @@
 package co.kr.datapia.application;
 
 import co.kr.datapia.domain.*;
+import co.kr.datapia.exceptions.BoardNotFoundException;
+import co.kr.datapia.utils.FileHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

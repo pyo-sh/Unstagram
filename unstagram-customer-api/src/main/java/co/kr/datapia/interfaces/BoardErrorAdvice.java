@@ -1,6 +1,6 @@
 package co.kr.datapia.interfaces;
 
-import co.kr.datapia.domain.BoardNotFoundException;
+import co.kr.datapia.exceptions.BoardNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

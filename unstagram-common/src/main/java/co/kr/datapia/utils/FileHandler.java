@@ -1,5 +1,7 @@
-package co.kr.datapia.domain;
+package co.kr.datapia.utils;
 
+import co.kr.datapia.domain.Board;
+import co.kr.datapia.domain.BoardPicture;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
