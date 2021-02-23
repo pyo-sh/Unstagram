@@ -24,8 +24,8 @@ public class UserLoginService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User authenticate(Integer user_idx, String userId, String password) {
-        User user = userRepository.findByIdxAndUserId(user_idx, userId)
+    public User authenticate(String userId, String password) {
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserIdNotExistedException(userId));
 
         if(!passwordEncoder.matches(password, user.getPassword())){

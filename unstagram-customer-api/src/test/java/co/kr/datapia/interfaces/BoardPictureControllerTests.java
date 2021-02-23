@@ -31,7 +31,7 @@ class BoardPictureControllerTests {
     public void readBoardWithExistedID() throws Exception {
         Integer board_idx = 1;
 
-        byte[] mockImage = new FileHandler().parseByteFile(BoardPicture.builder()
+        byte[] mockImage = new FileHandler().parseBoardPictureByteFile(BoardPicture.builder()
                 .idx(11)
                 .originalFileName("test.png")
                 .storedFilePath("testFile/test.jpeg")

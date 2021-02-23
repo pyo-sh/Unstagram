@@ -29,7 +29,7 @@ public class BoardPictureService {
         BoardPicture boardPicture = boardPictureRepository.findByIdx(boardPictureID)
                 .orElseThrow(() -> new BoardNotFoundException(boardPictureID));
 
-        return fileHandler.parseByteFile(boardPicture);
+        return fileHandler.parseBoardPictureByteFile(boardPicture);
     }
 
     public List<BoardPicture> addBoardPictures(
@@ -37,7 +37,7 @@ public class BoardPictureService {
             List<MultipartFile> files
     ) throws Exception {
         // 파일을 저장하고 그 BoardPicture 에 대한 list 를 가지고 있는다
-        List<BoardPicture> list = fileHandler.parseFileInfo(board, files);
+        List<BoardPicture> list = fileHandler.parseFileBoardPictureInfo(board, files);
 
         List<BoardPicture> boardPictures = new ArrayList<>();
         for(BoardPicture boardPicture : list) {

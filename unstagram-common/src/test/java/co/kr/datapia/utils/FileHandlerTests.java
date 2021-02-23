@@ -2,7 +2,6 @@ package co.kr.datapia.utils;
 
 import co.kr.datapia.domain.Board;
 import co.kr.datapia.domain.BoardPicture;
-import co.kr.datapia.utils.FileHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -52,7 +51,7 @@ class FileHandlerTests {
             .fileSize(200L)
             .build();
 
-        byte[] image = fileHandler.parseByteFile(boardPicture);
+        byte[] image = fileHandler.parseBoardPictureByteFile(boardPicture);
 
         assertTrue(image.length > 0);
     }
@@ -77,12 +76,12 @@ class FileHandlerTests {
             "content",
                 boardPicture.getStoredFilePath(),
             "image/jpeg",
-            fileHandler.parseByteFile(boardPicture));
+            fileHandler.parseBoardPictureByteFile(boardPicture));
 
         List<MultipartFile> mockFiles = new ArrayList<>();
         mockFiles.add(mockFile);
 
-        fileHandler.parseFileInfo(board, mockFiles);
+        fileHandler.parseFileBoardPictureInfo(board, mockFiles);
 
         File imageDir = new File(System.getProperty("user.dir") + "\\images");
         assertTrue(imageDir.exists());

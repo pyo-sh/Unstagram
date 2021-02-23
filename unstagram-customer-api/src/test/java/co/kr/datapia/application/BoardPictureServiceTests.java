@@ -87,7 +87,7 @@ class BoardPictureServiceTests {
     void getBytePicture() throws IOException {
         BoardPicture mockBoardPicture = this.mockBoardPictures.get(0);
 
-        byte[] mockImage = fileHandler.parseByteFile(mockBoardPicture);
+        byte[] mockImage = fileHandler.parseBoardPictureByteFile(mockBoardPicture);
 
         byte[] image = boardPictureService.getBytePicture(11);
         verify(boardPictureRepository).findByIdx(11);
@@ -101,7 +101,7 @@ class BoardPictureServiceTests {
                 "content",
                 this.mockBoardPictures.get(0).getStoredFilePath(),
                 "image/jpeg",
-                fileHandler.parseByteFile(this.mockBoardPictures.get(0)));
+                fileHandler.parseBoardPictureByteFile(this.mockBoardPictures.get(0)));
 
         List<MultipartFile> mockFiles = new ArrayList<>();
         mockFiles.add(mockFile);

@@ -7,12 +7,16 @@ import co.kr.datapia.model.response.SessionResponseDto;
 import co.kr.datapia.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@CrossOrigin
+@RestController
 public class SessionController {
     @Autowired
     private JwtUtil jwtUtil;
@@ -24,14 +28,12 @@ public class SessionController {
     public ResponseEntity<SessionResponseDto> create(
             @RequestBody SessionRequestDto resource
     ) throws URISyntaxException {
-        Integer user_idx = resource.getIdx();
         String userId = resource.getUserId();
         String password = resource.getPassword();
 
-        User user = userLoginService.authenticate(user_idx, userId, password);
+        User user = userLoginService.authenticate(userId, password);
 
         String accessToken = jwtUtil.createToken(
-                user.getIdx(),
                 user.getUserId()
         );
 
