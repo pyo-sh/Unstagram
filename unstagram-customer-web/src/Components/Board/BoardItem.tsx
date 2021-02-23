@@ -5,15 +5,27 @@ import BoardMenu from './BoardMenu';
 import BoardComment from './BoardComment';
 import BoardContent from './BoardContent';
 
-const BoardItem: React.FC = () => {
+interface PropType {
+  board: {
+    idx: number,
+    content: string,
+    pictures: any,
+    reportedDate: string
+  }
+}
+
+const BoardItem: React.FC<PropType> = ({ board }) => {
+  console.log(board);
   return (
     <BoardItemBox>
       <BoardHeader/>
       <div className="BoardItem-Image-Wrapper">
-        <img></img>
+        <img src={"http://localhost:8080/boardpicture/" + board.pictures[0].idx + "/"}></img>
       </div>
       <BoardMenu/>
-      <BoardContent/>
+      <BoardContent
+        content={board.content}
+        />
       <BoardComment/>
     </BoardItemBox>
   );
