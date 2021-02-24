@@ -4,6 +4,7 @@ import { createContext, Dispatch, useReducer, useContext } from 'react';
 
 export type User = {
     loading: boolean,
+    isLoggedIn: boolean,
     data: {
 
     } | null,
@@ -14,6 +15,7 @@ type UserState = User;
 
 const initialState: User = {
     loading: false,
+    isLoggedIn: false,
     data: null,
     error: null
 }

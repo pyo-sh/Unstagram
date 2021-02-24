@@ -10,6 +10,7 @@ const MainBox = styled.div`
         padding: 30px 0 0 0;
 
         .Main-Scroll{
+            width: 100vw;
             max-width: 614px;
 
             flex-direction: column;
