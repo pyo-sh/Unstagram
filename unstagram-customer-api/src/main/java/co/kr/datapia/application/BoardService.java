@@ -20,7 +20,7 @@ public class BoardService {
     }
 
     public List<Board> getBoards() {
-        return boardRepository.findAll();
+        return boardRepository.findAllByOrderByReportedDateDesc();
     }
 
     public Board addBoard(Board board){
