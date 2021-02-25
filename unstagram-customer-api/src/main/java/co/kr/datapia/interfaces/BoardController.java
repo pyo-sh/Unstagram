@@ -29,13 +29,13 @@ public class BoardController {
 
     @PostMapping("/board")
     public ResponseEntity<?> createBoard(
-            @Valid @RequestParam("user") String user,
+            //@Valid @RequestParam("user") String userId,
             @Valid @RequestParam("content") String content,
             @Valid @RequestParam("files") List<MultipartFile> files
             //MultipartHttpServletRequest multipartHttpServletRequest
     ) throws Exception {
         Board board = boardService.addBoard(Board.builder()
-                .user(user)
+                //.user(user)
                 .content(content)
                 .build());
 

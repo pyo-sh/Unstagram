@@ -3,7 +3,7 @@ package co.kr.datapia.application;
 import co.kr.datapia.domain.Board;
 import co.kr.datapia.domain.BoardPicture;
 import co.kr.datapia.domain.BoardPictureRepository;
-import co.kr.datapia.domain.FileHandler;
+import co.kr.datapia.utils.FileHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -45,7 +45,6 @@ class BoardPictureServiceTests {
     private void mockBoardPictureRepository () {
         Board board = Board.builder()
                 .idx(1)
-                .user("Pyo")
                 .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .build();
@@ -88,7 +87,7 @@ class BoardPictureServiceTests {
     void getBytePicture() throws IOException {
         BoardPicture mockBoardPicture = this.mockBoardPictures.get(0);
 
-        byte[] mockImage = fileHandler.parseByteFile(mockBoardPicture);
+        byte[] mockImage = fileHandler.parseBoardPictureByteFile(mockBoardPicture);
 
         byte[] image = boardPictureService.getBytePicture(11);
         verify(boardPictureRepository).findByIdx(11);
@@ -102,7 +101,7 @@ class BoardPictureServiceTests {
                 "content",
                 this.mockBoardPictures.get(0).getStoredFilePath(),
                 "image/jpeg",
-                fileHandler.parseByteFile(this.mockBoardPictures.get(0)));
+                fileHandler.parseBoardPictureByteFile(this.mockBoardPictures.get(0)));
 
         List<MultipartFile> mockFiles = new ArrayList<>();
         mockFiles.add(mockFile);

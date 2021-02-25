@@ -3,7 +3,7 @@ package co.kr.datapia.interfaces;
 import co.kr.datapia.application.BoardPictureService;
 import co.kr.datapia.application.BoardService;
 import co.kr.datapia.domain.Board;
-import co.kr.datapia.domain.BoardNotFoundException;
+import co.kr.datapia.exceptions.BoardNotFoundException;
 import co.kr.datapia.domain.BoardPicture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,14 +57,14 @@ class BoardControllerTests {
                 .build());
         // board 생성
         Integer board_idx = 1;
-        String user = "Pyo";
+        //String user = "Pyo";
         String content = "this is content";
         String reportedDate = new Date().toString();
 
         List<Board> boards = new ArrayList<>();
         boards.add(Board.builder()
                 .idx(board_idx)
-                .user(user)
+                //.user(user)
                 .content(content)
                 .reportedDate(reportedDate)
                 .pictures(pictures)
@@ -77,7 +77,7 @@ class BoardControllerTests {
         mvc.perform(get("/boards"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"idx\":" + board_idx.toString())))
-                .andExpect(content().string(containsString("\"user\":\"" + user + "\"")))
+                //.andExpect(content().string(containsString("\"user\":\"" + user + "\"")))
                 .andExpect(content().string(containsString("\"reportedDate\":\"" + reportedDate + "\"")))
                 .andExpect(content().string(containsString("\"content\":\"" + content + "\"")))
                 // pictures 포함하는지?
@@ -119,7 +119,7 @@ class BoardControllerTests {
 
         mvc.perform(MockMvcRequestBuilders.multipart("/board")
                 .file("files", mockFile.getBytes())
-                .param("user", "Pyo")
+                //.param("user", "Pyo")
                 .param("content", "this is content"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", "/board/1"))
@@ -151,7 +151,7 @@ class BoardControllerTests {
 
         Board board = Board.builder()
                 .idx(1)
-                .user("Pyo")
+                //.user("Pyo")
                 .reportedDate(reportedDate)
                 .content("this is content")
                 .pictures(pictures)
@@ -164,7 +164,7 @@ class BoardControllerTests {
         mvc.perform(get("/board/" + board.getIdx().toString()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("\"idx\":1")))
-                .andExpect(content().string(containsString("\"user\":\"Pyo\"")))
+                //.andExpect(content().string(containsString("\"user\":\"Pyo\"")))
                 .andExpect(content().string(containsString("\"reportedDate\":\"" + reportedDate + "\"")))
                 .andExpect(content().string(containsString("\"content\":\"this is content\"")))
             // pictures 포함하는지?
@@ -189,13 +189,11 @@ class BoardControllerTests {
     @Test
     public void updateBoardWithValidData() throws Exception {
         Integer id = 1;
-        String user = "Pyo";
         String content = "My Favorite Color";
 
         mvc.perform(patch("/board/" + id.toString())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"user\":\"" + user
-                        + "\", \"content\":\"" + content
+                .content("{\"content\":\"" + content
                         + "\", \"pictures\":[]}"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("{\"updated\":\"true\"}")));
@@ -224,7 +222,7 @@ class BoardControllerTests {
 
         Board board = Board.builder()
                 .idx(1)
-                .user("Pyo")
+                //.user("Pyo")
                 .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .pictures(pictures)

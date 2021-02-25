@@ -1,7 +1,7 @@
 package co.kr.datapia.application;
 
 import co.kr.datapia.domain.Board;
-import co.kr.datapia.domain.BoardNotFoundException;
+import co.kr.datapia.exceptions.BoardNotFoundException;
 import co.kr.datapia.domain.BoardPicture;
 import co.kr.datapia.domain.BoardRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +49,7 @@ class BoardServiceTests {
         this.mockBoards = new ArrayList<>();
         this.mockBoards.add(Board.builder()
                 .idx(1)
-                .user("Pyo")
+                //.user("Pyo")
                 .reportedDate("Tue Jan 19 2021 17:06:30 GMT+0900")
                 .content("this is content")
                 .pictures(pictures)
@@ -70,7 +70,7 @@ class BoardServiceTests {
         Board board = boards.get(0);
 
         assertEquals(board.getIdx(), 1);
-        assertEquals(board.getUser(), "Pyo");
+        //assertEquals(board.getUser(), "Pyo");
         assertEquals(board.getReportedDate(), "Tue Jan 19 2021 17:06:30 GMT+0900");
         assertEquals(board.getContent(), "this is content");
 
@@ -102,7 +102,7 @@ class BoardServiceTests {
         verify(boardRepository).save(this.mockBoards.get(0));
 
         assertEquals(board.getIdx(), 1);
-        assertEquals(board.getUser(), "Pyo");
+        //assertEquals(board.getUser(), "Pyo");
         assertEquals(board.getReportedDate(), new Date().toString());
         assertEquals(board.getContent(), "this is content");
     }
@@ -115,7 +115,7 @@ class BoardServiceTests {
         Board expectedBoard = this.mockBoards.get(0);
 
         assertEquals(board.getIdx(), expectedBoard.getIdx());
-        assertEquals(board.getUser(), expectedBoard.getUser());
+        //assertEquals(board.getUser(), expectedBoard.getUser());
         assertEquals(board.getReportedDate(), expectedBoard.getReportedDate());
         assertEquals(board.getContent(), expectedBoard.getContent());
 

@@ -11,13 +11,9 @@ class BoardTests {
     @Test
     public void creation () {
         Integer id = 1;
-        String user = "Pyo";
+        User user = User.builder().userId("Pyo").build();
         String content = "this is the content";
-
-        Date thisTime = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-
-        String reportedDate = thisTime.toString() + "T" + dateFormat.format(thisTime);
+        String reportedDate = new Date().toString();
 
         Board board = Board.builder()
                 .idx(id)
@@ -27,7 +23,7 @@ class BoardTests {
                 .build();
 
         assertEquals(board.getIdx(), id);
-        assertEquals(board.getUser(), user);
+        assertEquals(board.getUser().getUserId(), user.getUserId());
         assertEquals(board.getReportedDate(), reportedDate);
         assertEquals(board.getContent(), content);
     }
