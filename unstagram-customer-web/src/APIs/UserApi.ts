@@ -11,12 +11,8 @@ interface loginProp {
 }
 
 export async function loginUser({userId, password}: loginProp):Promise<Object> {
-    const formData = new FormData();
-    formData.append("userId", userId);
-    formData.append("password", password);
-
     const response: AxiosResponse = await axios.post(
-        "login", formData
+        "login", {userId, password}
     );
 
     return response.data;
