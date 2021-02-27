@@ -26,7 +26,10 @@ const UserStateContext = createContext<UserState | undefined>(undefined);
 
 type Action = 
     |   { type: 'LOGIN_USER'; }
-    |   { type: 'LOGIN_USER_SUCCESS'; }
+    |   {
+            type: 'LOGIN_USER_SUCCESS',
+            data: { accessToken: string }
+        }
     |   { type: 'LOGIN_USER_FAILURE'; };
 
 type UserDispatch = Dispatch<Action>;
@@ -48,15 +51,20 @@ function userReducer(state: UserState, action: Action): UserState {
         case 'LOGIN_USER':
             return {
                 ...state,
-                loading: false
+                loading: true,
+                isLoggedIn: false
             };
         case 'LOGIN_USER_SUCCESS':
+            // console.dir(action.data.accessToken)
             return {
-                ...state
+                ...state,
+                loading: false,
+                isLoggedIn: true
             };
         case 'LOGIN_USER_FAILURE':
             return {
-                ...state
+                ...state,
+                loading: false
             };
         default:
             throw new Error('Unhandled Action');
@@ -84,3 +92,10 @@ export function UserContextProvider({ children }: { children: React.ReactNode })
         </UserDispatchContext.Provider>
     );
 }
+
+// Custom dispatcher ----------------------------------------------
+
+import createAsyncDispatcher from './AsyncActionUtil';
+import { loginUser } from 'APIs/UserApi';
+
+export const loginDispatcher = createAsyncDispatcher('LOGIN_USER', loginUser);

@@ -1,13 +1,10 @@
-import { NextComponentType } from 'next';
+import { GetServerSideProps, NextComponentType } from 'next';
 import { AppContext, AppInitialProps, AppProps } from 'next/app';
 import Head from 'next/head';
 import { UserContextProvider } from 'Contexts/UserContext';
 import Layout from 'Components/Layout';
 import GlobalStyle from 'Styles/GlobalStyle';
-import { AppContextType } from 'next/dist/next-server/lib/utils';
-import { Router } from 'next/router';
-import { useEffect } from 'react';
-import createAsyncDispatcher from 'Contexts/AsyncActionUtil';
+import axios from 'axios';
 
 // App.getServerSideProps: GetServerSideProps = async (context) => {
 //   console.dir(context.req);
@@ -40,14 +37,20 @@ const App: NextComponentType<AppContext, AppInitialProps, AppProps> = ({ Compone
   </>
 }
 
-App.getInitialProps = async (context: AppContextType<Router>): Promise<AppInitialProps> => {
-    const { ctx } = context;
-    const pageProps = {
-      cookie: ctx.req?.headers.cookie
-    };
-    console.log(ctx.req?.headers.cookie);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  console.log(cookie)
 
-    return { pageProps };
+  if (context.req && cookie) {
+    axios.defaults.headers.Cookie = cookie;
+    
+  }
+
+  return {
+    props: {}
+  };
 }
+
 
 export default App;
